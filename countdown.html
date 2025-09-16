@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown to June 30, 2026</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        background-color: #0d1117;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #f0f6fc;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .container {
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 8px 24px rgba(1, 4, 9, 0.8);
+        max-width: 600px;
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 30px;
+        color: #f0f6fc;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+      }
+
+      .countdown-display {
+        font-size: 4rem;
+        font-weight: 600;
+        margin: 30px 0;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #58a6ff;
+        font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+          "Courier New", monospace;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+
+      .time-button {
+        background-color: #21262d;
+        border: 1px solid #30363d;
+        color: #f0f6fc;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+        font-family: inherit;
+      }
+
+      .time-button:hover {
+        background-color: #30363d;
+        border-color: #8b949e;
+        text-decoration: none;
+      }
+
+      .time-button.active {
+        background-color: #238636;
+        border-color: #238636;
+        color: #ffffff;
+      }
+
+      .time-button.active:hover {
+        background-color: #2ea043;
+        border-color: #2ea043;
+      }
+
+      .target-date {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #8b949e;
+        font-weight: 400;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .countdown-display {
+          font-size: 2.5rem;
+        }
+
+        .container {
+          padding: 20px;
+        }
+
+        .button-group {
+          gap: 6px;
+        }
+
+        .time-button {
+          padding: 6px 12px;
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Countdown</h1>
+      <div class="countdown-display" id="countdown">Loading...</div>
+      <div class="button-group">
+        <button class="time-button active" data-unit="days">Days</button>
+        <button class="time-button" data-unit="weeks">Weeks</button>
+        <button class="time-button" data-unit="months">Months</button>
+        <button class="time-button" data-unit="hours">Hours</button>
+      </div>
+      <div class="target-date">Until June 30, 2026</div>
+    </div>
+
+    <script>
+      const targetDate = new Date("2026-06-30T00:00:00");
+      let currentUnit = "days";
+
+      function updateCountdown() {
+        const now = new Date();
+        const timeDiff = targetDate - now;
+
+        if (timeDiff <= 0) {
+          document.getElementById("countdown").textContent = "Time's up!";
+          return;
+        }
+
+        let value;
+        let unit;
+
+        switch (currentUnit) {
+          case "days":
+            value = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            unit = value === 1 ? "day" : "days";
+            break;
+          case "weeks":
+            value = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+            unit = value === 1 ? "week" : "weeks";
+            break;
+          case "months":
+            // Approximate months (30.44 days average)
+            value = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30.44));
+            unit = value === 1 ? "month" : "months";
+            break;
+          case "hours":
+            value = Math.floor(timeDiff / (1000 * 60 * 60));
+            unit = value === 1 ? "hour" : "hours";
+            break;
+        }
+
+        document.getElementById("countdown").textContent = `${value} ${unit}`;
+      }
+
+      function setActiveButton(activeButton) {
+        document.querySelectorAll(".time-button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        activeButton.classList.add("active");
+      }
+
+      // Add event listeners to buttons
+      document.querySelectorAll(".time-button").forEach((button) => {
+        button.addEventListener("click", function () {
+          currentUnit = this.dataset.unit;
+          setActiveButton(this);
+          updateCountdown();
+        });
+      });
+
+      // Update countdown every second
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    </script>
+  </body>
+</html>
