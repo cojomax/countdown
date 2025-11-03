@@ -165,7 +165,7 @@
             break;
           case "months":
             // Approximate months (30.44 days average)
-            value = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30.44));
+            value = (timeDiff / (1000 * 60 * 60 * 24 * 30.44)).toFixed(1);
             unit = value === 1 ? "month" : "months";
             break;
           case "hours":
